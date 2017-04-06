@@ -86,11 +86,14 @@ class GeneticPlotter {
     for (BoxGene g : oldGenes) {
       genes.add(new BoxGene(g));
     }
-    int numMutations = (int)random(1, 10);
+    int numMutations = (int)random(1, 8);
     for (int m = 0; m < numMutations; m++) {
-      int i = (int)random(0, genes.size());
-      int property = (int)random(0, 6);
-      genes.get(i).set(property, random(0, 1));
+      int numProperties = (int)random(1, 3);
+      for (int p = 0; p < numProperties; p++) {
+        int i = (int)random(0, genes.size());
+        int property = (int)random(0, 6);
+        genes.get(i).set(property, random(0, 1));
+      }
     }
 
     float newS = similarity();

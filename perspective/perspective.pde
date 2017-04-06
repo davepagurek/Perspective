@@ -2,7 +2,7 @@ GeneticPlotter plotter;
 
 void setup() {
   size(100, 100, P3D);
-  plotter = new GeneticPlotter(100, loadImage("img/happy.png"), loadImage("img/sad.png"));
+  plotter = new GeneticPlotter(100, loadImage("img/hello.png"), loadImage("img/world.png"));
 }
 
 void draw() {

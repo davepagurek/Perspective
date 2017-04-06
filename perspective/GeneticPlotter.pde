@@ -1,14 +1,18 @@
 class GeneticPlotter {
   private class BoxGene {
     public float x, y, z, r, aX, aY;
-    public float get(int property) {
-      if (property == 0) return x/SIZE;
-      if (property == 1) return y/SIZE;
-      if (property == 2) return z/SIZE;
-      if (property == 3) return (r-10)/30;
-      if (property == 4) return aX/(2*PI);
-      return aY/(2*PI);
+
+    public BoxGene() {}
+
+    public BoxGene(BoxGene other) {
+      x = other.x;
+      y = other.y;
+      z = other.z;
+      r = other.r;
+      aX = other.aX;
+      aY = other.aY;
     }
+
     public void set(int property, float value) {
       if (property == 0) {
         x = value*SIZE;
@@ -28,15 +32,15 @@ class GeneticPlotter {
 
   public static final int SIZE = 100;
   public PImage a, b;
-  private ArrayList<BoxGene> spheres;
+  private ArrayList<BoxGene> genes;
   private float s = 0;
 
-  public GeneticPlotter(int numSpheres, PImage a, PImage b) {
+  public GeneticPlotter(int numgenes, PImage a, PImage b) {
     this.a = a;
     this.b = b;
-    this.spheres = new ArrayList<BoxGene>();
+    this.genes = new ArrayList<BoxGene>();
 
-    for (int i=0; i<numSpheres; i++) {
+    for (int i=0; i<numgenes; i++) {
       BoxGene s = new BoxGene();
       s.x = random(0, SIZE);
       s.y = random(0, SIZE);
@@ -44,7 +48,7 @@ class GeneticPlotter {
       s.r = random(0, 30) + 10;
       s.aX = random(0, 2*PI);
       s.aY = random(0, 2*PI);
-      spheres.add(s);
+      genes.add(s);
     }
 
     s = similarity();
@@ -63,7 +67,7 @@ class GeneticPlotter {
 
     graphics.fill(0x000000);
     graphics.noStroke();
-    for (BoxGene s : spheres) {
+    for (BoxGene s : genes) {
       graphics.pushMatrix();
       graphics.translate(s.x, s.y, s.z);
       graphics.rotateY(s.aY);
@@ -77,16 +81,23 @@ class GeneticPlotter {
   }
 
   private void runGeneration() {
-    int i = (int)random(0, spheres.size());
-    int property = (int)random(0, 6);
-    float old = spheres.get(i).get(property);
-    spheres.get(i).set(property, random(0, 1));
+    ArrayList<BoxGene> oldGenes = genes;
+    genes = new ArrayList<BoxGene>();
+    for (BoxGene g : oldGenes) {
+      genes.add(new BoxGene(g));
+    }
+    int numMutations = (int)random(1, 10);
+    for (int m = 0; m < numMutations; m++) {
+      int i = (int)random(0, genes.size());
+      int property = (int)random(0, 6);
+      genes.get(i).set(property, random(0, 1));
+    }
 
     float newS = similarity();
     if (newS <= s) {
       s = newS;
     } else {
-      spheres.get(i).set(property, old);
+      genes = oldGenes;
     }
   }
 
@@ -109,9 +120,6 @@ class GeneticPlotter {
     float s = 0;
     s += distance(front.get(), a);
     s += distance(side.get(), b);
-    //background(#FFFFFF);
-    //image(side.get(), 0, 0);
-    //println(s);
     return s;
   }
 

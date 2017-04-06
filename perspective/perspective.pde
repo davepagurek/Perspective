@@ -1,10 +1,8 @@
 GeneticPlotter plotter;
 
 void setup() {
-  //size(800, 450, P3D);
   size(100, 100, P3D);
-  //pixelDensity(displayDensity());
-  plotter = new GeneticPlotter(100, loadImage("img/hello.png"), loadImage("img/goose.png"));
+  plotter = new GeneticPlotter(100, loadImage("img/happy.png"), loadImage("img/sad.png"));
 }
 
 void draw() {
